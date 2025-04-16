@@ -35,7 +35,18 @@ app.use(cors({origin:allowedOrigins,  credentials:true}));
 
 
 
-
+// Disable caching for auth routes
+const disableCaching = (req, res, next) => {
+   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+   res.setHeader('Pragma', 'no-cache');
+   res.setHeader('Expires', '0');
+   next();
+ };
+ 
+ // Apply to logout and is-auth routes
+ app.use('/api/user/logout', disableCaching);
+ app.use('/api/user/is-auth', disableCaching);
+ 
 app.get('/', (req, res)=>res.send("API is working"));
 app.use('/api/user',userRouter)
 app.use('/api/seller',sellerRouter)
